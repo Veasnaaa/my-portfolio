@@ -2,17 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\Job;
+use App\Models\Contact;
+use Database\Factories\ContactFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class JobSeeder extends Seeder
+class ContactSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Job::factory(100)->create();
+        Contact::factory(10)->create();
     }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import {ref, nextTick} from "vue";
+import {ref, nextTick, onMounted} from "vue";
 import CircleProgress from "../Components/CircleProgress.vue";
 import FacebookIcon from "../Icons/FacebookIcon.vue";
 import InstagramIcon from "../Icons/InstagramIcon.vue";
@@ -9,6 +9,8 @@ import CssIcon from "../Icons/CssIcon.vue";
 import JavascriptIcon from "../Icons/JavascriptIcon.vue";
 import VueIcon from "../Icons/VueIcon.vue";
 import GitIcon from "../Icons/GitIcon.vue";
+import ContactSection from "../Components/ContactSection.vue";
+import {Vue3Marquee} from "vue3-marquee";
 
 const homeSection = ref(null);
 const skillsSection = ref(null);
@@ -17,11 +19,11 @@ const aboutSection = ref(null);
 const contactSection = ref(null);
 
 const navItems = [
-    {name: "Home", id: "home"},
-    {name: "Skills", id: "skills"},
-    {name: "Project", id: "project"},
-    {name: "About", id: "about"},
-    {name: "Contact", id: "contact"},
+    { name: "Home", id: "home" },
+    { name: "Skills", id: "skills" },
+    { name: "Project", id: "project" },
+    { name: "About", id: "about" },
+    { name: "Contact", id: "contact" },
 ];
 
 const sections = {
@@ -32,9 +34,11 @@ const sections = {
     contact: contactSection,
 };
 
+const activeIndex = ref(null)
+
 const scrollToSection = async (id) => {
     await nextTick();
-    const section = sections[id].value;
+    const section = sections[id]?.value;
     const navbarHeight = document.querySelector(".navbar").offsetHeight;
     if (section) {
         window.scrollTo({
@@ -46,12 +50,27 @@ const scrollToSection = async (id) => {
     }
 };
 
-const image = [
-    {src: "/src/assets/image/alibaba.jpg"},
-    {src: "/src/assets/image/freepik.jpg"},
-    {src: "/src/assets/image/project_swc.jpg"},
-    {src: "/src/assets/image/veasna.jpg"},
-];
+const handleClick = async (index, id) => {
+    activeIndex.value = index
+    localStorage.setItem('activeIndex', index)
+    await scrollToSection(id)
+}
+
+
+onMounted(async () => {
+    const saved = localStorage.getItem('activeIndex')
+    const scrollTop = window.scrollY || window.pageYOffset
+
+    if (scrollTop < 50) {
+        // If user is already at top of page, default to Home
+        activeIndex.value = 0
+    } else if (saved !== null) {
+        activeIndex.value = parseInt(saved)
+        // Optionally scroll to that section if needed
+        await scrollToSection(navItems.value[activeIndex.value].id)
+    }
+})
+
 
 const skill = [
     {logo: HtmlIcon, percent: '98',},
@@ -66,10 +85,10 @@ const skill = [
 
 <template>
     <div
-        class="bg-gradient-to-br from-black to-slate-950 scroll-smooth min-h-screen"
+        class="bg-gradient-to-tr from-black to-slate-900 scroll-smooth min-h-screen"
     >
         <div
-            class="bg-[#1E1E1E] border-b sticky z-20 top-0 border-gray-700"
+            class="bg-[#1E1E1E] border-b sticky z-50 top-0 border-gray-700"
         >
             <div class="container navbar mx-auto h-20 flex justify-between items-center px-3">
                 <h1 class="text-white text-xl font-bold hover:cursor-pointer">
@@ -78,15 +97,16 @@ const skill = [
                 <div class="text-white">
                     <ul class="flex lg:gap-10 gap-3">
                         <li v-for="(item, index) in navItems" :key="index">
-                            <a
-                                @click.prevent="scrollToSection(item.id)"
-                                href="#"
-                                class="hover:no-underline text-[16px] lg:text-lg group text-white hover:text-yellow-500 transition hover:cursor-pointer duration-300"
-                            >{{ item.name }}
-                                <span
-                                    class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 lg:h-[3px] bg-yellow-600"
-                                ></span>
-                            </a>
+                            <span
+                                @click.prevent="handleClick(index, item.id)"
+                                class="hover:no-underline text-[16px] lg:text-lg group hover:text-yellow-500 transition hover:cursor-pointer duration-300"
+                                :class="[ activeIndex === index ? 'text-yellow-500' : 'text-white']"
+                            >
+                                {{ item.name }}
+                                <span class="block group-hover:max-w-full transition-all duration-500 h-0.5 lg:h-[3px] bg-yellow-600"
+                                      :class="[ activeIndex === index ? 'max-w-full' : 'max-w-0']"
+                                />
+                            </span>
                         </li>
                     </ul>
                 </div>
@@ -138,7 +158,7 @@ const skill = [
                         class="w-40 h-40 lg:w-96 lg:h-96 flex justify-center items-center"
                     >
                         <div
-                            class="bg-black hover:rotate-90 duration-500 shadow-lg shadow-white rounded-full w-full h-full"
+                            class="bg-black duration-500 shadow-white shadow-lg hover:shadow-xl hover:shadow-white rounded-full w-full h-full animate-spin"
                         ></div>
                     </div>
                 </div>
@@ -147,71 +167,61 @@ const skill = [
         <div ref="skillsSection" class="bg-slate-900 py-10 md:py-20 px-3">
             <div class="container mx-auto">
                 <div class="space-y-2 text-white pb-10">
-                    <h2 class="text-yellow-600 font-bold text-2xl text-left">
+                    <h2 class="text-yellow-400 font-bold text-2xl text-left">
                         Skills
                     </h2>
-                    <p>Those are my skills that I have learned from college and myself also!</p>
+                    <p>Those are my skills that I have learned from college and self-learning</p>
                 </div>
-                <div class="grid grid-flow-col auto-cols-max items-center gap-8 overflow-x-auto">
-                    <div class="w-48 h-48 md:w-60 md:h-60"
-                         v-for="skills in skill"
-                         :key="skills"
-                    >
-                        <CircleProgress
-                            class="text-white"
-                            :value="skills.percent"
-                            :max="100"
-                            :icon="skills.logo"
-                            unit="%"
-                        />
+                <vue3-marquee :pause-on-hover="true">
+                    <div class="grid grid-flow-col auto-cols-max items-center gap-8 overflow-x-auto">
+                        <div class="w-48 h-48 md:w-60 md:h-60"
+                             v-for="skills in skill"
+                             :key="skills"
+                        >
+                            <CircleProgress
+                                class="text-white"
+                                :value="skills.percent"
+                                :max="100"
+                                :icon="skills.logo"
+                                unit="%"
+                            />
+                        </div>
                     </div>
-                </div>
+                </vue3-marquee>
             </div>
         </div>
         <div ref="projectSection" class="py-10 md:py-20 px-3">
             <div class="container mx-auto">
                 <div class="space-y-2 text-white pb-10">
-                    <h2 class="text-yellow-600 font-bold text-2xl text-left">
+                    <h2 class="text-yellow-400 font-bold text-2xl text-left">
                         PROJECT
                     </h2>
                     <p>Those are my skills that I have learned from college and myself also!</p>
                 </div>
-                <!--                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4">-->
-                <!--                    <div-->
-                <!--                        class="bg-transparent rounded-lg border-2 border-cyan-600 h-96 overflow-hidden"-->
-                <!--                    >-->
-                <!--                        <img class="w-full h-full object-cover" src="/src/assets/image/alibaba.jpg" alt="">-->
-                <!--                    </div>-->
-                <!--                    <div-->
-                <!--                        class="bg-transparent rounded-lg border-2 border-cyan-600 col-span-2 h-96 overflow-hidden"-->
-                <!--                    >-->
-                <!--                        <img class="w-full h-full object-cover" src="/src/assets/image/freepik.jpg" alt="">-->
-                <!--                    </div>-->
-                <!--                    <div-->
-                <!--                        class="bg-transparent rounded-lg border-2 border-cyan-600 col-span-2 h-96 overflow-hidden"-->
-                <!--                    >-->
-                <!--                        <img class="w-full h-full object-cover" src="/src/assets/image/freepik.jpg" alt="">-->
-                <!--                    </div>-->
-                <!--                    <div-->
-                <!--                        class="bg-transparent rounded-lg border-2 border-cyan-600 h-96 overflow-hidden"-->
-                <!--                    >-->
-                <!--                        <img class="w-full h-full object-cover" src="/src/assets/image/veasna.jpg" alt="">-->
-                <!--                    </div>-->
-                <!--                </div>-->
+                <div class="grid grid-cols-5 items-center gap-4 pb-4">
+                    <div class="col-span-3 min-h-72 bg-gray-600 rounded-md animate-pulse"/>
+                    <div class="min-h-72 bg-gray-500 rounded-md animate-pulse"/>
+                    <div class=" min-h-72 bg-gray-600 rounded-md animate-pulse"/>
+                </div>
+                <div class="grid grid-cols-5 items-center gap-4">
+                    <div class="min-h-72 bg-gray-600 rounded-md animate-pulse"/>
+                    <div class="min-h-72 bg-gray-500 rounded-md animate-pulse"/>
+                    <div class="col-span-3 min-h-72 bg-gray-600 rounded-md animate-pulse"/>
+                </div>
             </div>
         </div>
 
         <div ref="aboutSection" class="bg-slate-900 py-10 md:py-20 px-3">
             <div class="container mx-auto">
                 <div class="space-y-2 text-white pb-10">
-                    <h2 class="text-yellow-600 font-bold text-2xl text-left">
+                    <h2 class="text-yellow-400 font-bold text-2xl text-left">
                         About Me
                     </h2>
                     <p>Those are my skills that I have learned from college and myself also!</p>
                 </div>
                 <div class="flex flex-col md:flex-row items-start gap-8 md:gap-3.5">
                     <div class="h-full flex flex-row md:flex-col justify-between items-start gap-16">
-                        <h2 class="text-8xl text-yellow-600 font-bold ">
+                        <h2 class="text-8xl text-yellow-400 font-bold ">
                             1+
                         </h2>
                         <p class="w-1/2 text-white text-lg">Year working experience</p>
@@ -241,6 +251,12 @@ const skill = [
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div ref="contactSection" class="py-10 md:py-20 px-3">
+            <div class="py-12">
+                <ContactSection/>
             </div>
         </div>
     </div>

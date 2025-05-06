@@ -1,14 +1,9 @@
 <?php
 
-use App\Models\Job;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
-Route::get('/' , function(){
-    return Inertia::render('Index');
-})->name('index');
-
-Route::get('/jobs' , function(){
-    $jobs = Job::all();
-});
+Route::get('/', [ContactController::class, 'index'])->name('index');
+Route::post('/', [ContactController::class, 'store'])->name('store');

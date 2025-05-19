@@ -52,5 +52,14 @@ class ContactController extends Controller
             return redirect()->route('index')->with('error', 'There was a problem submitting your message. Please try again.');
         }
     }
+
+    public function getContact(): Response
+    {
+        $contact = Contact::select('first_name', 'last_name', 'email', 'subject', 'message')
+            ->OrderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return Inertia::render('Contact', [ 'contact' => $contact ]);
+    }
 }
 

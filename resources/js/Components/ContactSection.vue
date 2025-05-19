@@ -30,9 +30,9 @@ const submit = () => {
 
 <template>
     <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-        <div class="relative overflow-hidden shadow-sm sm:rounded-lg bg-slate-900 p-0.5">
-            <div class="relative z-20 bg-slate-800 p-6 rounded-lg">
-                <h1 class="text-yellow-500 text-2xl font-bold mb-6">Contact Us</h1>
+        <div class="relative overflow-hidden shadow-sm sm:rounded-lg p-0.5">
+            <div class="relative z-20 bg-gradient-to-tr from-[#17171A] border border-slate-800 p-6 rounded-lg">
+                <h1 class="text-cyan-500 text-2xl font-bold mb-6">Contact Me</h1>
 
                 <!-- Success Message -->
                 <div v-if="$page.props.flash.success" class="mb-4 p-4 bg-green-100 text-green-700 rounded">
@@ -47,7 +47,8 @@ const submit = () => {
                                 id="first_name"
                                 v-model="form.first_name"
                                 type="text"
-                                class="mt-1 px-2 h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-white outline-none"
+                                autocomplete="off"
+                                class="mt-1 px-2 h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-gray-400 outline-none"
                                 :class="{ 'border-red-500': form.errors.first_name }"
                             />
                             <div v-if="form.errors.first_name" class="text-red-500 text-sm mt-1">{{ form.errors.first_name }}</div>
@@ -59,8 +60,9 @@ const submit = () => {
                                 id="last_name"
                                 v-model="form.last_name"
                                 type="text"
-                                class="mt-1 px-2 h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-white outline-none"
-                                :class="{ 'border-red-500': form.last_name }"
+                                autocomplete="off"
+                                class="mt-1 px-2 h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-gray-400 outline-none"
+                                :class="{ 'border-red-500' : form.errors.last_name }"
                             />
                             <div v-if="form.errors.last_name" class="text-red-500 text-sm mt-1">{{ form.errors.last_name }}</div>
                         </div>
@@ -72,7 +74,8 @@ const submit = () => {
                             id="email"
                             v-model="form.email"
                             type="email"
-                            class="mt-1 px-2 h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-white outline-none"
+                            autocomplete="off"
+                            class="mt-1 px-2 h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-gray-400 outline-none"
                             :class="{ 'border-red-500': form.errors.email }"
                         />
                         <div v-if="form.errors.email" class="text-red-500 text-sm mt-1">{{ form.errors.email }}</div>
@@ -84,7 +87,8 @@ const submit = () => {
                             id="subject"
                             v-model="form.subject"
                             type="text"
-                            class="mt-1 px-2 h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-white outline-none"
+                            autocomplete="off"
+                            class="mt-1 px-2 h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-gray-400 outline-none"
                             :class="{ 'border-red-500': form.errors.subject }"
                         />
                         <div v-if="form.errors.subject" class="text-red-500 text-sm mt-1">{{ form.errors.subject }}</div>
@@ -96,7 +100,7 @@ const submit = () => {
                             id="message"
                             v-model="form.message"
                             rows="5"
-                            class="mt-1 px-2 min-h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-white outline-none"
+                            class="mt-1 px-2 min-h-10 bg-transparent text-white w-full rounded-md border border-gray-500 focus:border-gray-400 outline-none"
                             :class="{ 'border-red-500': form.errors.message }"
                         ></textarea>
                         <div v-if="form.errors.message" class="text-red-500 text-sm mt-1">{{ form.errors.message }}</div>

@@ -9,13 +9,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+//        User::factory()->create([
+//            'username' => 'Admin',
+//            'password' => 'password',
+//            'email' => 'admin@example.com',
+//        ]);
 
         $this->call([
-            ContactSeeder::class
+//            ContactSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }
